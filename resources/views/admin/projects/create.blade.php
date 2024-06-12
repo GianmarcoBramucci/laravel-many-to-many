@@ -35,6 +35,19 @@
                     @endforeach
                 </select>
               </div>
+              <div class="mb-3">
+                <p>Select Tag:</p>
+                @foreach ($technologies as $technology)
+                <div>
+                    <input type="checkbox" name="technologies[]" value="{{ $technology->id }}" class="form-check-input"
+                        {{ in_array($technology->id, old('technologies', [])) ? 'checked' : '' }}>
+                    <label for="" class="form-check-label">{{ $technology->name }}</label>
+                </div>
+                @endforeach
+                @error('technologies')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
               <button type="submit" class="btn btn-primary">invia</button>    
             </form>
     </section>

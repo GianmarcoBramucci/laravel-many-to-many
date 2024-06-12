@@ -3,19 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Category;
-use App\Models\Technology;
+use Illuminate\Support\Str;
+use App\Models\project;
 
-
-class project extends Model
+class Technology extends Model
 {
     use HasFactory;
-    protected $fillable = ['title','img','content', 'slug' , 'category_id'];
-    public static function generateSlug($title){
-        $slugBase = Str::slug(trim($title), '-');
-        $slugs = \App\Models\project::orderBy('slug')->pluck('slug')->toArray();
+    protected $fillable = ['name','slug'];
+    public static function generateSlug($name){
+        $slugBase = Str::slug(trim($name), '-');
+        $slugs = \App\Models\Technology::orderBy('slug')->pluck('slug')->toArray();
         $num = 1;
         $slugNumbers = [];
         
@@ -38,12 +36,7 @@ class project extends Model
         }
         return $slug;
     }
-    public function category(){
-        return $this->belongsTo(Category::class);
-    }
-    public function technologies(){
-        return $this->belongsToMany(Technology::class);
+    public function projects(){
+        return $this->belongsToMany(project::class);
     }
 }
-
-

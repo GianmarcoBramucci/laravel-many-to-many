@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\project;
 use App\Models\Category;
+use App\Models\Technology;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -35,7 +36,8 @@ class ProjectController extends Controller
     public function create()
     {
         $categories= Category::all();
-        return view('admin.projects.create',compact('categories'));
+        $technologies= Technology::all();
+        return view('admin.projects.create',compact('categories','technologies'));
     }
 
     /**
@@ -51,6 +53,9 @@ class ProjectController extends Controller
             $formData['img']= $imgPath;    
             }
         $newProject = project::create($formData);
+        if($request->has('technologies')){
+            $newProject->technologies()->sync($request->technologies);
+        }
         return redirect()->route('admin.projects.index');
     }
 
@@ -68,7 +73,8 @@ class ProjectController extends Controller
     public function edit(project $project)
     {
         $categories= Category::all();
-        return view('admin.projects.edit',compact('project'),compact('categories'));
+        $technologies= Technology::all();
+        return view('admin.projects.edit',compact('project','categories','technologies'));
     }
 
     /**
@@ -84,7 +90,11 @@ class ProjectController extends Controller
             $imgPath= Storage::put('ProjectsImg',$request->img);
             $formData['img']= $imgPath;    
             }
-        $project->update($formData); 
+        $project->update($formData);
+        
+        if($request->has('technologies')){
+            $project->technologies()->sync($request->technologies);
+        } 
         return redirect()->route('admin.projects.index');
     }
 
